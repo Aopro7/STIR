@@ -9,6 +9,10 @@ You can train and use SatTCP by following the steps below, you can also refer to
 ```
 data_preprocessing.tokenFileGenerate()
 ```
+* BM25 score calculating:
+```
+BM25.BM25_Score_Output()
+```
 * Divide the dataset into trainset and testset
 ```
 dataset_devide.projectlevel_Trainset_Testset_Devide()
