@@ -6,9 +6,13 @@ You can download this dataset at <https://sites.google.com/view/ir-based-tcp/res
 # Getting Started
 You can train and use SatTCP by following the steps below, you can also refer to the process in `run_example.py`.
 * Data preprocess:
-`data_preprocessing.tokenFileGenerate()`
+```
+data_preprocessing.tokenFileGenerate()
+```
 * Divide the dataset into trainset and testset
-`dataset_devide.projectlevel_Trainset_Testset_Devide()`
+```
+dataset_devide.projectlevel_Trainset_Testset_Devide()
+```
 * Parameter setting
 ```
 base_Model: basic pretrained model that provided by sentence_transformers.
@@ -16,7 +20,9 @@ frontdivision: the top ratio of test cases that selected in the phase of coarse-
 backdivision: the bottom ratio of test cases that selected in the phase of coarse-grained filtering(default by 0.05).
 ```
 * Trainging SatTCP:
-`training.SatTCPtraining(frontdivision, backdivision, base_Model, trainset, outputModel, BM25forTrain, epoch)`
+```
+training.SatTCPtraining(frontdivision, backdivision, base_Model, trainset, outputModel, BM25forTrain, epoch)
+```
 * evaluation:
 ```
 training.COSscore_Output(outputModel, testset, scoreOutput)
