@@ -39,9 +39,9 @@ def SatTCPtraining(frontdivision, backdivision, modelname, trainprojectpath, out
     for project, BM25score in zip(projectList, BM25scores):
 
         currentjobs = utils.read_raw_job(project['jobID'])
-        file_q = utils.read_buildTokens(project['buildID'])
+        file_q = utils.read_buildTokens(project['buildID'], 1)
         qurey = " ".join(file_q)
-        sentences = utils.read_jobsTokens(project['jobID'])
+        sentences = utils.read_jobsTokens(project['jobID'], 1)
 
         SortedIndex = list(np.argsort(-(np.array(BM25score))))
 
@@ -102,9 +102,9 @@ def COSscore_Output(modelpath, testprojectpath, outputpath):
     projectList = utils.read_projects_from_csv(testprojectpath)
 
     for project in projectList:
-        qurey = " ".join(utils.read_buildTokens(project['buildID']))
+        qurey = " ".join(utils.read_buildTokens(project['buildID']), 1)
         sentences = []
-        file = utils.read_jobsTokens(project['jobID'])
+        file = utils.read_jobsTokens(project['jobID'], 1)
         for sentence in file:
             sentences.append(" ".join(sentence))
         cosScores = util.pytorch_cos_sim(model.encode(qurey), model.encode(sentences))
