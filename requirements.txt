@@ -4,3 +4,5 @@ nltk
 javalang
 sentence_transformers
 torch
+gensim==3.8.3
+numpy
