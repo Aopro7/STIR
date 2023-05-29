@@ -51,7 +51,7 @@ def spliter(tokens):
 
     return pureenglishtokens
 
-def javawords_cleanout(rawTokensList): 
+def javawords_cleanout(rawTokensList):  # 去除java关键词token
     Keywords = javalang.tokenizer.Keyword.VALUES
     Modifiers = javalang.tokenizer.Modifier.VALUES
     BasicTypes = javalang.tokenizer.BasicType.VALUES
@@ -85,7 +85,8 @@ def tokenize(sourcecode):
         if (token not in sr) and (len(token) >= 3):
             clean_tokens.append(token)
     MFtokens = clean_tokens
-    return MFtokens   # if MUtokens are needed, just duplicated the MFtokens.
+    MUtokens = list(set(MFtokens))
+    return MFtokens, MUtokens
 
 # Generate tokens and output .json file into each folds
 def tokenFileGenerate():
@@ -93,25 +94,32 @@ def tokenFileGenerate():
     for project in projects:
 
         # for builds, using .java files only
-        buildtokens = []
+        MFbuildtokens = []
+        MUbuildtokens = []
         file = utils.read_raw_build(project["buildID"])
         for pair in file:
             filename = pair["name"]
             if len(filename) >= 6:
                 if filename[len(filename) - 5:] == ".java":
-                    tokenlist = tokenize(pair["content"])
-                    for token in tokenlist:
-                        buildtokens.append(token)
-        MFbuildtokens = buildtokens
-        path = "data/builds/" + project["buildID"] + "/MFbuildtokens.json"
-        utils.wirte_json(MFbuildtokens, path)
+                    MFtokenlist, MUtokenlist = tokenize(pair["content"])
+                    for MFtoken, MUtoken in zip(MFtokenlist, MUtokenlist):
+                        MFbuildtokens.append(MFtoken)
+                        MUbuildtokens.append(MUtoken)
+        MUbuildtokens = list(set(MUbuildtokens))
+
+        utils.wirte_json(MFbuildtokens, "data/builds/" + project["buildID"] + "/MFbuildtokens.json")
+        utils.wirte_json(MUbuildtokens, "data/builds/" + project["buildID"] + "/MUbuildtokens.json")
 
         # for jobs
-        jobtokens = []
+        MFjobtokens = []
+        MUjobtokens = []
+
         file = utils.read_raw_job(project["jobID"])
         for pair in file:
-            tokenlist = tokenize(pair["content"])
-            jobtokens.append(tokenlist)
-        path = "data/jobs/" + project["jobID"] + "/MFjobtokens.json"
-        utils.wirte_json(jobtokens, path)
+            MFtokenlist, MUtokenlist = tokenize(pair["content"])
+            MFjobtokens.append(MFtokenlist)
+            MUjobtokens.append(MUtokenlist)
+
+        utils.wirte_json(MFjobtokens, "data/jobs/" + project["jobID"] + "/MFjobtokens.json")
+        utils.wirte_json(MUjobtokens, "data/jobs/" + project["jobID"] + "/MUjobtokens.json")
 
